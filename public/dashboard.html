@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Salary Negotiation Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .dashboard-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .data-input-form {
+        margin-bottom: 20px;
+      }
+      .chart-container {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <h1>Salary Dashboard</h1>
+      <div class="data-input-form">
+        <form id="salaryForm" onsubmit="handleSalarySubmit(event)">
+          <input
+            type="number"
+            id="currentSalary"
+            placeholder="Current Salary"
+            required
+          />
+          <input
+            type="number"
+            id="targetSalary"
+            placeholder="Target Salary"
+            required
+          />
+          <textarea id="notes" placeholder="Notes"></textarea>
+          <button type="submit">Save Data</button>
+        </form>
+      </div>
+      <div class="chart-container">
+        <canvas id="salaryChart"></canvas>
+      </div>
+    </div>
+    <script>
+      // Check authentication
+      if (!localStorage.getItem("token")) {
+        window.location.href = "/test.html";
+      }
+
+      async function handleSalarySubmit(event) {
+        event.preventDefault();
+        const formData = {
+          currentSalary: document.getElementById("currentSalary").value,
+          targetSalary: document.getElementById("targetSalary").value,
+          notes: document.getElementById("notes").value,
+        };
+
+        try {
+          await fetch("http://localhost:3000/api/salary", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify(formData),
+          });
+          updateChart();
+        } catch (error) {
+          console.error("Error saving data:", error);
+        }
+      }
+
+      function updateChart() {
+        // Fetch and display salary data using Chart.js
+        // Implementation details here
+      }
+    </script>
+  </body>
+</html>
